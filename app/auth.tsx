@@ -16,9 +16,9 @@ import {
   View,
 } from "react-native";
 
-const PRIMARY_BLUE = "#0D1B2A";
-const SECONDARY_BLUE = "#1B263B";
-const ACCENT_GREEN = "#1ABC9C";
+const PRIMARY = "#FF6B6B";      // inspirado no logo
+const SECONDARY = "#1ABC9C";    // verde/teal do logo
+const DARK_BG = "#0B1220";
 const INPUT_BG = "#FFFFFF";
 const PLACEHOLDER = "#94A3B8";
 const TEXT_DARK = "#0F172A";
@@ -26,9 +26,8 @@ const TEXT_LIGHT = "#FFFFFF";
 
 export default function AuthScreen() {
   const router = useRouter();
-
   const { width: screenWidth } = useWindowDimensions();
-  const cardWidth = Math.min(screenWidth * 0.9, 400);
+  const cardWidth = Math.min(screenWidth * 0.92, 420);
 
   const [isLogin, setIsLogin] = useState(true);
   const [email, setEmail] = useState("");
@@ -52,8 +51,6 @@ export default function AuthScreen() {
       Alert.alert("Erro", "Preencha todos os campos.");
       return;
     }
-
-    // Aqui depois você coloca autenticação real
     router.replace("/dashboard");
   };
 
@@ -62,21 +59,20 @@ export default function AuthScreen() {
       Alert.alert("Erro", "Preencha todos os campos.");
       return;
     }
-
     if (senha !== confirmarSenha) {
       Alert.alert("Erro", "As senhas não coincidem.");
       return;
     }
-
-    // Aqui depois você coloca cadastro real
     router.replace("/dashboard");
   };
 
   return (
-    <LinearGradient
-      colors={[PRIMARY_BLUE, SECONDARY_BLUE]}
-      style={styles.container}
-    >
+   <LinearGradient
+  colors={["#312f2f", "#22094b", "#a41010"]}
+  start={{ x: 0, y: 0 }}
+  end={{ x: 1, y: 1 }}
+  style={styles.container}
+>
       <ScrollView
         contentContainerStyle={styles.scrollContent}
         keyboardShouldPersistTaps="handled"
@@ -85,14 +81,17 @@ export default function AuthScreen() {
           behavior={Platform.OS === "ios" ? "padding" : undefined}
           style={{ width: "100%", alignItems: "center" }}
         >
-          {/* LOGO */}
+          {/* LOGO GRANDE */}
           <View style={styles.logoContainer}>
             <Image
-              source={require("../assets/images/logoFreelaTrack.png")}
+              source={require("../assets/images/logo.png")}
               style={styles.logoImage}
               resizeMode="contain"
             />
             <Text style={styles.appName}>FreelaTrack</Text>
+            <Text style={styles.subtitle}>
+              Gestão inteligente para freelancers
+            </Text>
           </View>
 
           {/* CARD */}
@@ -130,14 +129,12 @@ export default function AuthScreen() {
                 <Pressable
                   style={({ pressed }) => [
                     styles.primaryButton,
-                    pressed && styles.buttonPressed,
+                    pressed && { opacity: 0.8 },
                   ]}
                   onPress={handleLogin}
                 >
                   <Text style={styles.primaryButtonText}>Entrar</Text>
                 </Pressable>
-
-                <Text style={styles.linkSmall}>Esqueci minha senha</Text>
 
                 <Pressable onPress={toggleScreen}>
                   <Text style={styles.link}>
@@ -189,7 +186,7 @@ export default function AuthScreen() {
                 <Pressable
                   style={({ pressed }) => [
                     styles.primaryButton,
-                    pressed && styles.buttonPressed,
+                    pressed && { opacity: 0.8 },
                   ]}
                   onPress={handleSignup}
                 >
@@ -214,78 +211,88 @@ export default function AuthScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+
   scrollContent: {
     flexGrow: 1,
     justifyContent: "center",
     alignItems: "center",
-    paddingVertical: 40,
+    paddingVertical: 30,
   },
+
+  logoContainer: {
+    alignItems: "center",
+    marginBottom: 30,
+  },
+
+  logoImage: {
+    width: 160,   // 🔥 LOGO MAIOR
+    height: 160,
+    marginBottom: 10,
+  },
+
+  appName: {
+    fontSize: 34,
+    fontWeight: "bold",
+    color: TEXT_LIGHT,
+  },
+
+  subtitle: {
+    color: "#CBD5E1",
+    marginTop: 5,
+  },
+
   card: {
     backgroundColor: INPUT_BG,
-    borderRadius: 24,
+    borderRadius: 28,
     overflow: "hidden",
     paddingVertical: 30,
-    elevation: 8,
+    elevation: 10,
     shadowColor: "#000",
-    shadowOpacity: 0.15,
-    shadowRadius: 12,
-    shadowOffset: { width: 0, height: 6 },
+    shadowOpacity: 0.2,
+    shadowRadius: 15,
+    shadowOffset: { width: 0, height: 8 },
   },
+
   form: {
     alignItems: "center",
     paddingHorizontal: 20,
   },
+
   title: {
     fontSize: 22,
     fontWeight: "bold",
     marginBottom: 20,
     color: TEXT_DARK,
   },
+
   input: {
     width: "100%",
-    backgroundColor: INPUT_BG,
+    backgroundColor: "#F8FAFC",
     padding: 16,
-    borderRadius: 12,
+    borderRadius: 14,
     marginBottom: 15,
     borderWidth: 1,
     borderColor: "#E2E8F0",
   },
+
   primaryButton: {
     width: "100%",
-    backgroundColor: ACCENT_GREEN,
-    padding: 15,
+    padding: 16,
     borderRadius: 18,
     alignItems: "center",
     marginTop: 10,
+    backgroundColor: SECONDARY,
   },
-  buttonPressed: { opacity: 0.7 },
+
   primaryButtonText: {
     color: TEXT_LIGHT,
     fontWeight: "bold",
     fontSize: 16,
   },
+
   link: {
     marginTop: 20,
-    color: ACCENT_GREEN,
+    color: PRIMARY,
     fontWeight: "600",
-  },
-  linkSmall: {
-    marginTop: 10,
-    color: "#64748B",
-    fontSize: 13,
-  },
-  logoContainer: {
-    alignItems: "center",
-    marginBottom: 40,
-  },
-  appName: {
-    fontSize: 30,
-    fontWeight: "bold",
-    color: TEXT_LIGHT,
-  },
-  logoImage: {
-    width: 90,
-    height: 90,
-    marginBottom: 10,
   },
 });

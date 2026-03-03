@@ -1,25 +1,14 @@
+import { LinearGradient } from "expo-linear-gradient";
+import { useRouter } from "expo-router";
 import React, { useEffect, useRef } from "react";
 import {
-    Animated,
-    Pressable,
-    ScrollView,
-    StyleSheet,
-    Text,
-    View,
+  Animated,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  View,
 } from "react-native";
-
-/* ================= PALETA HACKER ================= */
-
-const COLORS = {
-  background: "#050A18",
-  card: "#0E1628",
-  neon: "#00F5FF",
-  purple: "#8B5CF6",
-  success: "#00FF9D",
-  danger: "#FF3D71",
-  text: "#E6F1FF",
-  muted: "#5F7C99",
-};
 
 /* ================= MOCK DATA ================= */
 
@@ -44,34 +33,18 @@ const projectsData = [
 
 /* ================= GREETING ================= */
 
-
 function getGreeting() {
   const hour = new Date().getHours();
 
-  if (hour >= 6 && hour < 12) {
-    return "Bom dia";
-  }
-
-  if (hour >= 12 && hour < 18) {
-    return "Boa tarde";
-  }
-
-  if (hour >= 19 && hour < 24) {
-    return "Boa noite";
-  }
-
-  // De 00:00 até 05:59
+  if (hour >= 6 && hour < 12) return "Bom dia";
+  if (hour >= 12 && hour < 18) return "Boa tarde";
+  if (hour >= 19 && hour < 24) return "Boa noite";
   return "Tá animado";
 }
-/* ================= CARD ================= */
 
-function Card({
-  children,
-  delay = 0,
-}: {
-  children: React.ReactNode;
-  delay?: number;
-}) {
+/* ================= CARD ANIMADO ================= */
+
+function Card({ children, delay = 0 }) {
   const opacity = useRef(new Animated.Value(0)).current;
   const translateY = useRef(new Animated.Value(20)).current;
 
@@ -94,10 +67,7 @@ function Card({
 
   return (
     <Animated.View
-      style={[
-        styles.card,
-        { opacity, transform: [{ translateY }] },
-      ]}
+      style={[styles.card, { opacity, transform: [{ translateY }] }]}
     >
       {children}
     </Animated.View>
@@ -107,104 +77,118 @@ function Card({
 /* ================= DASHBOARD ================= */
 
 export default function Dashboard() {
+  const router = useRouter();
+
   return (
-    <View style={styles.container}>
+    <LinearGradient
+      colors={["#312f2f", "#22094b", "#a41010"]}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+      style={styles.container}
+    >
       <ScrollView
         showsVerticalScrollIndicator={false}
         contentContainerStyle={{ paddingBottom: 120 }}
       >
+        {/* NAVBAR */}
+        <View style={styles.topNav}>
+          <Pressable
+            style={styles.navButton}
+            onPress={() => router.replace("/")}
+          >
+            <Text style={styles.navText}>Login</Text>
+          </Pressable>
+
+          <Pressable
+            style={styles.navButton}
+            onPress={() => router.push("/projetos")}
+          >
+            <Text style={styles.navText}>Projetos</Text>
+          </Pressable>
+
+          <Pressable
+            style={styles.navButton}
+            onPress={() => router.push("/clientes")}
+          >
+            <Text style={styles.navText}>Clientes</Text>
+          </Pressable>
+
+          <Pressable
+            style={styles.navButton}
+            onPress={() => router.push("/faturas")}
+          >
+            <Text style={styles.navText}>Faturas</Text>
+          </Pressable>
+
+
+          <Pressable
+            style={styles.navButton}
+            onPress={() => router.push("/relatorios")}
+          >
+            <Text style={styles.navText}>Relatórios</Text>
+          </Pressable>
+
+        </View>
+
+        
+
         {/* HEADER */}
         <View style={styles.header}>
-          <View>
-            <Text style={styles.greeting}>
-              {getGreeting()}, Programador
-            </Text>
-            <Text style={styles.subtitle}>
-              Sistema Freelancer Ativo
-            </Text>
-          </View>
-
-          <View style={styles.headerRight}>
-           
-             
-                
-              
-
-            
-          </View>
+          <Text style={styles.greeting}>
+            {getGreeting()}, Programador
+          </Text>
+          <Text style={styles.subtitle}>
+            Sistema Freelancer Ativo
+          </Text>
         </View>
 
         {/* RECEITA */}
         <Card delay={100}>
-          <Text style={styles.bigLabel}>
-            Receita do mês
-          </Text>
+          <Text style={styles.bigLabel}>Receita do mês</Text>
           <Text style={styles.bigValue}>
             R$ {data.revenueMonth}
           </Text>
         </Card>
 
-        {/* PROJETOS + HORAS */}
-        <View style={styles.row}>
+        {/* PROJETOS + HORAS (ESTILIZADOS) */}
+        <View style={styles.statsRow}>
           <Card delay={200}>
-            <Text style={styles.cardTitle}>
-              Projetos Ativos
-            </Text>
-            <Text style={styles.cardHighlight}>
-              {data.projects}
-            </Text>
+            <Text style={[styles.cardTitle, { color: "#a59291" }]}>
+ Projetos Ativos
+</Text>
+
+            <View style={styles.statValueBox}>
+              <Text style={styles.statValue}>
+                {data.projects}
+              </Text>
+            </View>
+
             <Text style={styles.cardSub}>
               Em andamento
             </Text>
           </Card>
 
           <Card delay={300}>
-            <Text style={styles.cardTitle}>
-              Horas Trabalhadas
-            </Text>
-            <Text
-              style={[
-                styles.cardHighlight,
-                { color: COLORS.neon },
-              ]}
-            >
-              {data.hours}h
-            </Text>
+            <Text style={[styles.cardTitle, { color: "#a59291" }]}>
+  Horas Trabalhadas
+</Text>
+
+            <View style={styles.statValueBox}>
+              <Text style={[styles.statValue, { color: "#00F5FF" }]}>
+                {data.hours}h
+              </Text>
+            </View>
+
             <Text style={styles.cardSub}>
               Este mês
             </Text>
           </Card>
         </View>
 
-        {/* INDICADOR DE PERFORMANCE */}
-        <Card delay={350}>
-          <Text style={styles.sectionTitle}>
-            Indicador de Performance
-          </Text>
-
-          <View style={styles.performanceRow}>
-            <Text style={styles.performanceLabel}>
-              Status do Sistema:
-            </Text>
-            <Text style={styles.performanceOnline}>
-              ONLINE
-            </Text>
-          </View>
-
-          <View style={styles.performanceRow}>
-            <Text style={styles.performanceLabel}>
-              Produtividade:
-            </Text>
-            <Text style={styles.performanceHigh}>
-              ALTA
-            </Text>
-          </View>
-        </Card>
-
-        {/* PROJETOS ATIVOS */}
+        {/* PROJETOS LISTA */}
         <Card delay={400}>
           <Text style={styles.sectionTitle}>
-         Projetos Ativos
+            Projetos Ativos
           </Text>
 
           {projectsData.map((project, index) => (
@@ -225,24 +209,17 @@ export default function Dashboard() {
           ))}
         </Card>
 
-        {/* ALERTA INTELIGENTE */}
+        {/* ALERTA */}
         <Card delay={500}>
           <Text style={styles.alertTitle}>
-             Alerta Inteligente
+           Alerta Inteligente
           </Text>
           <Text style={styles.alertText}>
             1 projeto vence em 3 dias.
           </Text>
         </Card>
       </ScrollView>
-
-      {/* FLOATING BUTTON */}
-      <Pressable style={styles.fab}>
-        <Text style={{ color: "#000", fontSize: 24 }}>
-          +
-        </Text>
-      </Pressable>
-    </View>
+    </LinearGradient>
   );
 }
 
@@ -251,117 +228,93 @@ export default function Dashboard() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
     paddingHorizontal: 20,
-    paddingTop: 50,
+    paddingTop: 60,
   },
 
-  header: {
+  topNav: {
     flexDirection: "row",
     justifyContent: "space-between",
-    alignItems: "center",
-    marginBottom: 30,
+    marginBottom: 25,
   },
 
-  headerRight: {
-    flexDirection: "row",
-    gap: 10,
+  navButton: {
+    backgroundColor: "rgba(255,255,255,0.25)",
+    paddingVertical: 8,
+    paddingHorizontal: 14,
+    borderRadius: 12,
   },
 
-  headerButton: {
-    paddingVertical: 6,
-    paddingHorizontal: 10,
-    borderRadius: 8,
-    backgroundColor: "#12203A",
-  },
-
-  headerButtonText: {
-    color: COLORS.neon,
+  navText: {
+    color: "#FFF",
+    fontWeight: "bold",
     fontSize: 12,
   },
 
+  header: {
+    marginBottom: 20,
+  },
+
   greeting: {
-    color: COLORS.text,
+    color: "#FFF",
     fontSize: 22,
     fontWeight: "bold",
   },
 
   subtitle: {
-    color: COLORS.muted,
+    color: "#F1F5F9",
     marginTop: 4,
   },
 
   card: {
-    backgroundColor: COLORS.card,
+    backgroundColor: "#0E1628",
     padding: 20,
     borderRadius: 18,
     marginBottom: 20,
-    borderWidth: 1,
-    borderColor: "#12203A",
   },
 
   bigLabel: {
-    color: COLORS.muted,
+    color: "#CBD5E1",
   },
 
   bigValue: {
-    color: COLORS.success,
-    fontSize: 36,
+    color: "#00FF9D",
+    fontSize: 32,
     fontWeight: "bold",
     marginTop: 8,
   },
 
-  row: {
+  statsRow: {
     flexDirection: "row",
     justifyContent: "space-between",
     gap: 12,
   },
 
-  cardTitle: {
-    color: COLORS.muted,
-    fontSize: 12,
-    textTransform: "uppercase",
-    letterSpacing: 1,
+  statValueBox: {
+    marginTop: 12,
+    backgroundColor: "rgba(255,255,255,0.08)",
+    paddingVertical: 16,
+    borderRadius: 14,
+    alignItems: "center",
   },
 
-  cardHighlight: {
-    color: COLORS.success,
+  statValue: {
+    color: "#00FF9D",
     fontSize: 28,
     fontWeight: "bold",
-    marginTop: 6,
   },
 
   cardSub: {
-    color: COLORS.muted,
+    color: "#CBD5E1",
     fontSize: 12,
-    marginTop: 4,
+    marginTop: 6,
   },
 
   sectionTitle: {
-    color: COLORS.text,
+    color: "#FFF",
     fontSize: 16,
     fontWeight: "bold",
     marginBottom: 15,
-  },
-
-  performanceRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 8,
-  },
-
-  performanceLabel: {
-    color: COLORS.muted,
-  },
-
-  performanceOnline: {
-    color: COLORS.success,
-    fontWeight: "bold",
-  },
-
-  performanceHigh: {
-    color: COLORS.neon,
-    fontWeight: "bold",
   },
 
   projectCard: {
@@ -369,44 +322,32 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingVertical: 14,
     borderBottomWidth: 1,
-    borderBottomColor: "#12203A",
+    borderBottomColor: "#1F2A44",
   },
 
   projectName: {
-    color: COLORS.text,
+    color: "#FFF",
     fontWeight: "600",
   },
 
   deadline: {
-    color: COLORS.muted,
+    color: "#CBD5E1",
     fontSize: 12,
     marginTop: 4,
   },
 
   projectValue: {
-    color: COLORS.neon,
+    color: "#00F5FF",
     fontWeight: "bold",
   },
 
   alertTitle: {
-    color: COLORS.danger,
+    color: "#FF3D71",
     fontWeight: "bold",
     marginBottom: 6,
   },
 
   alertText: {
-    color: COLORS.text,
-  },
-
-  fab: {
-    position: "absolute",
-    bottom: 30,
-    right: 20,
-    backgroundColor: COLORS.neon,
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    justifyContent: "center",
-    alignItems: "center",
+    color: "#FFF",
   },
 });
